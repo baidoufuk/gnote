@@ -41,19 +41,89 @@
         </div>
       </div>
     </div>
+
+    <!-- 友情提示弹窗 -->
+    <el-dialog
+      v-model="showTipDialog"
+      width="90%"
+      :style="{ maxWidth: '500px' }"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      class="tip-dialog"
+    >
+      <template #header>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-xl">
+            <svg class="w-6 h-6 text-[#667eea]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="text-xl font-bold text-gray-800">友情提示</div>
+        </div>
+      </template>
+
+      <div class="py-4">
+        <div class="text-gray-700 text-base leading-relaxed space-y-2">
+          <p>每次都要系好安全带，</p>
+          <p>切勿盲目跟车，</p>
+          <p>错过就等待下一班公交，</p>
+          <p>公交永远都有，不差这一班。</p>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-center">
+          <button
+            @click="closeTipDialog"
+            class="px-8 py-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300"
+          >
+            我知道了
+          </button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Loading } from '@element-plus/icons-vue'
 import Header from './components/Header.vue'
 import PostList from './components/PostList.vue'
 import { usePosts } from './composables/usePosts'
 
 const { posts, loading, fetchPosts } = usePosts()
+const showTipDialog = ref(false)
+
+const closeTipDialog = () => {
+  showTipDialog.value = false
+}
 
 onMounted(() => {
   fetchPosts()
+  // 显示友情提示弹窗
+  showTipDialog.value = true
 })
 </script>
+
+<style>
+.tip-dialog .el-dialog {
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.tip-dialog .el-dialog__header {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tip-dialog .el-dialog__body {
+  padding: 0 1.5rem;
+}
+
+.tip-dialog .el-dialog__footer {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid #f3f4f6;
+}
+</style>
