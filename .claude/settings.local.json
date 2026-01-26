@@ -6,7 +6,11 @@
       "Bash(npm run build)",
       "Bash(tree -L 3 -I 'node_modules|dist' /Users/baidoufu/Source/FeiShu-Frontend)",
       "Bash(git init)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"Initial commit: Vue 3 project with modern UI design\n\n- Migrated from vanilla JavaScript to Vue 3 + Vite\n- Added Element Plus component library\n- Implemented modern UI design with glassmorphism effects\n- Optimized for mobile devices\n- Ready for Vercel deployment\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\")",
+      "Bash(git branch -M main)",
+      "Bash(git remote add origin https://github.com/baidoufuk/gnote.git)",
+      "Bash(git push -u origin main)"
     ]
   }
 }
