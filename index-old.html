@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿K的分享</title>
+
+    <!-- DaisyUI + Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.6.0/dist/full.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --timeline-color: #e0e0e0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--timeline-color);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        @media (max-width: 576px) {
+            .timeline-dot {
+                left: -28px;
+            }
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2] p-5 sm:p-4">
+    <div class="max-w-[700px] mx-auto">
+        <!-- 头部 -->
+        <div class="bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl px-8 py-6 mb-8 shadow-xl text-center">
+            <h1 class="text-3xl sm:text-2xl font-bold text-white mb-2 drop-shadow-sm">
+                <svg class="inline-block w-7 h-7 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                阿K的分享
+            </h1>
+            <p class="text-white/90 text-sm">个人分享信息，不做各种决策建议</p>
+        </div>
+
+        <!-- 加载状态 -->
+        <div id="loading" class="text-center py-12">
+            <div class="loading-spinner mx-auto"></div>
+            <p class="text-white mt-4">加载中...</p>
+        </div>
+
+        <!-- 错误提示 -->
+        <div id="error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">加载失败！</strong>
+            <span class="block sm:inline" id="error-message"></span>
+        </div>
+
+        <!-- 内容列表 -->
+        <div id="posts-container" class="relative pl-10 sm:pl-8 hidden">
+            <!-- 动态生成内容 -->
+        </div>
+
+        <!-- 免责声明 -->
+        <div class="bg-white/15 border border-white/30 rounded-lg mt-12 px-4 py-3 text-center text-[11px] sm:text-[10px] text-white/85 leading-relaxed backdrop-blur-md">
+            <div class="font-semibold text-white mb-1">
+                <svg class="inline-block w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                免责声明
+            </div>
+            <p class="mb-1 opacity-90">本平台所有内容均为个人信息分享，仅供参考学习，不构成任何投资、法律、医疗或其他专业建议。访问者应根据自身情况独立判断，并自行承担由此产生的一切责任。内容发布者不对任何因使用本平台信息而产生的直接或间接损失承担责任。</p>
+            <p class="mb-0">© 2026 阿K的分享 · 仅供参考</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
