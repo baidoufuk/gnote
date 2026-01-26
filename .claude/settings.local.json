@@ -10,7 +10,9 @@
       "Bash(git commit -m \"Initial commit: Vue 3 project with modern UI design\n\n- Migrated from vanilla JavaScript to Vue 3 + Vite\n- Added Element Plus component library\n- Implemented modern UI design with glassmorphism effects\n- Optimized for mobile devices\n- Ready for Vercel deployment\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\")",
       "Bash(git branch -M main)",
       "Bash(git remote add origin https://github.com/baidoufuk/gnote.git)",
-      "Bash(git push -u origin main)"
+      "Bash(git push -u origin main)",
+      "Bash(git add src/App.vue)",
+      "Bash(git commit -m \"Add friendly tip dialog on page load\n\n- Added a dialog that shows on every page refresh\n- Dialog can only be closed by clicking the ''我知道了'' button\n- Clicking outside or pressing ESC won''t close the dialog\n- Styled with gradient button and modern design\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\")"
     ]
   }
 }
