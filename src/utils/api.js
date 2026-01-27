@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://tofuali.top'
+// 使用相对路径，部署到 Vercel 后会自动调用同域名下的 API
+// 开发环境可以通过 VITE_API_BASE_URL 环境变量指定 API 地址
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

@@ -1,5 +1,6 @@
 // 配置：后端 API 地址
-const API_BASE_URL = 'http://tofuali.top'; // 临时使用 HTTP，待 SSL 证书修复后改回 HTTPS
+// Vercel 部署时使用空字符串（相对路径），本地开发时可以设置为 'http://localhost:3000'
+const API_BASE_URL = ''; // 部署到 Vercel 后，前后端在同一域名下，使用相对路径即可
 
 // 格式化日期时间
 function formatDateTime(dateString) {
