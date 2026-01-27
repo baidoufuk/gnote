@@ -7,16 +7,13 @@
     class="custom-dialog"
   >
     <template #header>
-      <div class="flex items-center gap-3 px-2">
-        <div class="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-xl">
-          <svg class="w-5 h-5 text-[#667eea]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center gap-2 px-2">
+        <div class="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-lg">
+          <svg class="w-4 h-4 text-[#667eea]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <div>
-          <div class="text-lg font-bold text-gray-800">详细内容</div>
-          <div class="text-sm text-gray-500">{{ formatDateTimeFull(post.created_at) }}</div>
-        </div>
+        <div class="text-sm text-gray-600">{{ formatDateTimeFull(post.created_at) }}</div>
       </div>
     </template>
 
@@ -24,7 +21,7 @@
       <div class="text-gray-700 text-base leading-relaxed whitespace-pre-wrap break-words">
         {{ post.content }}
       </div>
-      <div v-if="post.image_path" class="mt-6 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+      <div v-if="post.image_path && post.image_path.trim()" class="mt-6 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
         <img
           :src="`${API_BASE_URL}/uploads/${post.image_path}`"
           alt="内容配图"

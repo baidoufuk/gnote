@@ -11,18 +11,36 @@ logger = logging.getLogger(__name__)
 
 # Supabase 配置
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 # 优先使用 service_role key（服务端安全），否则使用 anon key
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY", "")
+SUPABASE_KEY = SUPABASE_SERVICE_ROLE_KEY or os.environ.get("SUPABASE_KEY", "")
 IS_DEVELOPMENT = os.environ.get("VERCEL_ENV") != "production"
 
 # 初始化 Supabase 客户端
 supabase = None
+logger.info({
+    "event": "env_loaded",
+    "has_url": bool(SUPABASE_URL),
+    "has_service_role": bool(SUPABASE_SERVICE_ROLE_KEY),
+    "vercel_env": os.environ.get("VERCEL_ENV"),
+})
+print("[posts.py] Env loaded:", json.dumps({
+    "has_url": bool(SUPABASE_URL),
+    "has_service_role": bool(SUPABASE_SERVICE_ROLE_KEY),
+    "vercel_env": os.environ.get("VERCEL_ENV"),
+}))
 if SUPABASE_URL and SUPABASE_KEY:
     try:
         from supabase import create_client
         supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        logger.info("Supabase client initialized successfully")
+        print("[posts.py] Supabase client initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize Supabase: {e}")
+        print(f"[posts.py] Failed to initialize Supabase: {e}")
+else:
+    logger.warning("Supabase env vars missing, unable to initialize client")
+    print("[posts.py] Supabase env vars missing, client not initialized")
 
 
 def get_fake_posts():
@@ -82,6 +100,13 @@ class handler(BaseHTTPRequestHandler):
             # 如果配置了 Supabase，从数据库获取数据
             if supabase:
                 try:
+                    logger.info({
+                        "event": "supabase_query_start",
+                        "table": "gold_signals",
+                        "limit": limit,
+                    })
+                    print("[posts.py] Supabase query start", json.dumps({"table": "gold_signals", "limit": limit}))
+
                     # 只选择前端需要的字段，不暴露内部字段
                     response = supabase.table('gold_signals') \
                         .select('id, content, image_path, created_at') \
@@ -92,10 +117,27 @@ class handler(BaseHTTPRequestHandler):
                         .limit(limit) \
                         .execute()
 
-                    if response.data:
-                        posts = response.data
+                    response_data = response.data if response and response.data else []
+                    response_error = getattr(response, "error", None)
+                    logger.info({
+                        "event": "supabase_query_result",
+                        "count": len(response_data),
+                        "error": response_error,
+                    })
+                    print("[posts.py] Supabase query result", json.dumps({
+                        "count": len(response_data),
+                        "error": response_error,
+                        "preview": response_data[:2],
+                    }, default=str))
+                    if response_error:
+                        logger.error({"event": "supabase_query_error", "error": response_error})
+                        print("[posts.py] Supabase query error", response_error)
+
+                    if response_data:
+                        posts = response_data
                 except Exception as db_error:
                     logger.error(f"Database query failed: {db_error}")
+                    print(f"[posts.py] Database query failed: {db_error}")
                     # 数据库错误时，如果是开发环境则返回假数据，生产环境返回空数组
                     if IS_DEVELOPMENT:
                         posts = get_fake_posts()

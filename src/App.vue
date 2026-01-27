@@ -22,19 +22,19 @@
       <PostList v-else-if="posts.length > 0" :posts="posts" />
 
       <!-- 免责声明 -->
-      <div class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl mt-12 sm:mt-8 px-5 py-4 sm:px-4 sm:py-3 text-center text-xs text-white/90 leading-relaxed shadow-xl">
-        <div class="flex items-center justify-center gap-2 font-bold text-white mb-2.5 sm:mb-2">
-          <div class="flex items-center justify-center w-5 h-5 sm:w-4 sm:h-4 bg-white/20 rounded-lg">
-            <svg class="w-3 h-3 sm:w-2.5 sm:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl mt-8 sm:mt-6 px-4 py-3 sm:px-3 sm:py-2.5 text-center text-xs text-white/90 leading-relaxed shadow-xl">
+        <div class="flex items-center justify-center gap-1.5 font-bold text-white mb-1.5 sm:mb-1">
+          <div class="flex items-center justify-center w-4 h-4 sm:w-3.5 sm:h-3.5 bg-white/20 rounded-lg">
+            <svg class="w-2.5 h-2.5 sm:w-2 sm:h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
-          <span class="text-sm sm:text-xs">免责声明</span>
+          <span class="text-xs sm:text-[11px]">免责声明</span>
         </div>
-        <p class="mb-2.5 sm:mb-2 opacity-90 text-[11px] sm:text-[10px]">
+        <p class="mb-1.5 sm:mb-1 opacity-90 text-[10px] sm:text-[9px]">
           本平台所有内容均为个人信息分享，仅供参考学习，不构成任何投资、法律、医疗或其他专业建议。访问者应根据自身情况独立判断，并自行承担由此产生的一切责任。内容发布者不对任何因使用本平台信息而产生的直接或间接损失承担责任。
         </p>
-        <div class="flex items-center justify-center gap-2 text-white/70 text-[10px] sm:text-[9px]">
+        <div class="flex items-center justify-center gap-2 text-white/70 text-[9px] sm:text-[8px]">
           <span>© 2026 阿K的分享</span>
           <span>·</span>
           <span>仅供参考</span>
