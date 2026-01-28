@@ -17,13 +17,13 @@
       </div>
     </template>
 
-    <div class="px-2 py-4">
-      <div class="text-gray-700 text-base leading-relaxed whitespace-pre-wrap break-words">
+    <div class="px-2 py-3">
+      <div class="text-gray-800 text-[15px] leading-[1.75] whitespace-pre-wrap break-words font-medium">
         {{ post.content }}
       </div>
-      <div v-if="post.image_path && post.image_path.trim()" class="mt-6 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+      <div v-if="hasImage" class="mt-5 rounded-xl overflow-hidden shadow-md border border-gray-100">
         <img
-          :src="`${API_BASE_URL}/uploads/${post.image_path}`"
+          :src="imageUrl"
           alt="内容配图"
           loading="lazy"
           class="w-full h-auto"
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { formatDateTimeFull } from '@/utils/format'
 import { API_BASE_URL } from '@/utils/api'
 
@@ -53,6 +53,21 @@ const emit = defineEmits(['update:modelValue'])
 
 const dialogVisible = ref(props.modelValue)
 
+// 检查是否有图片
+const hasImage = computed(() =>
+  typeof props.post?.image_path === 'string' && props.post.image_path.trim().length > 0
+)
+
+// 智能处理图片 URL：如果是完整 URL 直接使用，否则拼接 uploads 路径
+const imageUrl = computed(() => {
+  if (!hasImage.value) return ''
+  const trimmedPath = props.post.image_path.trim()
+  // 检查是否已经是完整的 HTTP(S) URL
+  return /^https?:\/\//i.test(trimmedPath)
+    ? trimmedPath
+    : `${API_BASE_URL}/uploads/${trimmedPath.replace(/^\/+/, '')}`
+})
+
 watch(() => props.modelValue, (newVal) => {
   dialogVisible.value = newVal
 })
@@ -64,16 +79,17 @@ watch(dialogVisible, (newVal) => {
 
 <style>
 .custom-dialog .el-dialog {
-  border-radius: 1.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+  margin-top: 5vh !important;
 }
 
 .custom-dialog .el-dialog__header {
-  padding: 1.5rem 1.5rem 1rem;
+  padding: 1.25rem 1.25rem 0.875rem;
   border-bottom: 1px solid #f3f4f6;
 }
 
 .custom-dialog .el-dialog__body {
-  padding: 0 1.5rem 1.5rem;
+  padding: 0 1.25rem 1.25rem;
 }
 </style>

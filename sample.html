@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息通知 - 极简时间轴</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        [v-cloak] { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* 调整 Timeline 线条颜色，使其更融合 */
+        .el-timeline-item__tail { border-left: 2px solid #e5e7eb; }
+        /* 调整节点光晕 */
+        .el-timeline-item__node { box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15); }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <div id="app" v-cloak class="flex flex-col min-h-screen">
+        
+        <header class="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white py-6 shadow-md flex-none">
+            <div class="max-w-3xl mx-auto px-6">
+                <h1 class="text-2xl font-bold tracking-wider flex items-center gap-2">
+                    <el-icon><Bell /></el-icon> 消息中心
+                </h1>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-3xl mx-auto px-6 py-12 w-full">
+            
+            <el-timeline>
+                <el-timeline-item
+                    v-for="(msg, index) in messages"
+                    :key="msg.id"
+                    :timestamp="msg.date"
+                    placement="top"
+                    :color="msg.isRead ? '#d1d5db' : '#667eea'" 
+                    :hollow="msg.isRead"
+                    size="large"
+                >
+                    <div 
+                        @click="openDetail(msg)"
+                        class="bg-white p-5 rounded-lg border border-gray-100 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:border-[#667eea]/40 hover:-translate-y-0.5 relative group"
+                    >
+                        <span v-if="!msg.isRead" class="absolute top-4 right-4 h-2 w-2 bg-red-500 rounded-full"></span>
+
+                        <h3 class="text-base font-bold text-gray-800 mb-2 group-hover:text-[#667eea] transition-colors pr-4">
+                            {{ msg.title }}
+                        </h3>
+                        
+                        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                            {{ msg.content }}
+                        </p>
+                    </div>
+                </el-timeline-item>
+            </el-timeline>
+
+            <div v-if="messages.length === 0" class="text-center text-gray-400 py-10">
+                暂无消息
+            </div>
+        </main>
+
+        <footer class="bg-gray-100 border-t border-gray-200 py-6 flex-none">
+            <div class="max-w-3xl mx-auto px-6 text-center space-y-2">
+                <p class="text-xs text-gray-500 font-medium">免责声明</p>
+                <p class="text-[10px] text-gray-400 leading-relaxed max-w-xl mx-auto">
+                    本消息通知中心仅作为信息传达工具。系统不对因网络延迟、设备故障或不可抗力导致的消息送达失败承担责任。
+                    所有消息内容仅供参考，具体业务操作请以实际系统数据为准。
+                </p>
+            </div>
+        </footer>
+
+        <el-dialog
+            v-model="dialogVisible"
+            :title="currentMsg?.title"
+            width="85%"
+            class="sm:max-w-md rounded-xl"
+            align-center
+        >
+            <div v-if="currentMsg" class="pb-4">
+                <div class="flex items-center gap-2 text-xs text-gray-400 mb-4">
+                    <el-icon><Clock /></el-icon> {{ currentMsg.date }}
+                </div>
+                <div class="text-sm text-gray-700 leading-7 text-justify">
+                    {{ currentMsg.content }}
+                </div>
+            </div>
+            </el-dialog>
+
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+        const { Bell, Clock } = ElementPlusIconsVue;
+
+        const app = createApp({
+            setup() {
+                const dialogVisible = ref(false);
+                const currentMsg = ref(null);
+
+                const messages = ref([
+                    {
+                        id: 1,
+                        date: '2023-10-24 14:30',
+                        title: '系统维护完成通知',
+                        content: '本次系统升级已顺利完成，所有服务已恢复正常。感谢您的耐心等待，如有问题请联系支持团队。',
+                        isRead: false
+                    },
+                    {
+                        id: 2,
+                        date: '2023-10-23 09:15',
+                        title: '账户安全风险提示',
+                        content: '我们检测到您的账户在非常用设备登录。如果这不是您本人的操作，请立即修改密码并联系管理员。为了您的资金安全，请务必重视此条提醒。',
+                        isRead: false
+                    },
+                    {
+                        id: 3,
+                        date: '2023-10-21 16:00',
+                        title: '本周会议纪要更新',
+                        content: '周一的产品评审会议纪要已上传至文档中心，请相关人员查阅并确认下周的开发排期。附件中包含了下个迭代的详细功能列表。',
+                        isRead: true
+                    },
+                    {
+                        id: 4,
+                        date: '2023-10-18 10:00',
+                        title: '新功能上线公告',
+                        content: '数据报表导出功能现已上线！您现在可以将统计数据导出为 Excel 或 PDF 格式，方便进行月度汇报整理。',
+                        isRead: true
+                    },
+                    {
+                        id: 5,
+                        date: '2023-10-15 08:30',
+                        title: '欢迎加入',
+                        content: '欢迎使用新版消息通知中心。',
+                        isRead: true
+                    }
+                ]);
+
+                const openDetail = (msg) => {
+                    currentMsg.value = msg;
+                    dialogVisible.value = true;
+                    // 打开即已读
+                    if(!msg.isRead) msg.isRead = true;
+                };
+
+                return {
+                    messages,
+                    dialogVisible,
+                    currentMsg,
+                    openDetail
+                };
+            }
+        });
+
+        app.component('Bell', Bell);
+        app.component('Clock', Clock);
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+</html>

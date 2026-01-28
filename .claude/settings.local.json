@@ -20,7 +20,8 @@
       "Bash(vercel)",
       "mcp__codex__codex",
       "Bash(vercel --prod)",
-      "Bash(vercel logs:*)"
+      "Bash(vercel logs:*)",
+      "Bash(npm run dev)"
     ]
   }
 }
