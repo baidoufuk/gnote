@@ -90,6 +90,15 @@ const getPreview = (content) => {
 }
 </script>
 
+<style>
+/* 全局样式：强制覆盖 Element Plus 的 timeline padding */
+@media (max-width: 640px) {
+  .el-timeline.is-start {
+    padding-left: 0 !important;
+  }
+}
+</style>
+
 <style scoped>
 /* 调整 Timeline 线条颜色 */
 :deep(.el-timeline-item__tail) {
