@@ -126,22 +126,27 @@ const getPreview = (content) => {
   /* 时间戳样式 - 极度压缩 */
   :deep(.el-timeline-item__timestamp) {
     font-size: 9px !important;
-    padding-right: 4px !important;
-    max-width: 42px !important;
-    line-height: 1.2 !important;
-    opacity: 0.7;
+    padding-right: 6px !important;
+    width: 64px !important;
+    max-width: 64px !important;
+    min-width: 64px !important;
+    line-height: 1.25 !important;
+    word-break: keep-all;
+    white-space: normal;
+    hyphens: none;
+    opacity: 0.75;
   }
 
   /* 时间轴节点 - 对齐到标题位置 */
   :deep(.el-timeline-item__node) {
     width: 8px !important;
     height: 8px !important;
-    left: 42px !important;
+    left: 64px !important;
   }
 
   /* 时间轴线条 - 对齐到标题位置 */
   :deep(.el-timeline-item__tail) {
-    left: 42px !important;
+    left: 64px !important;
   }
 
   /* 时间轴项目 */
@@ -152,7 +157,7 @@ const getPreview = (content) => {
   /* 内容区域 - 让卡片从节点位置开始，卡片内 padding 会让标题与节点对齐 */
   :deep(.el-timeline-item__wrapper) {
     padding-left: 10px !important;
-    margin-left: 42px !important;
+    margin-left: 64px !important;
   }
 }
 </style>
