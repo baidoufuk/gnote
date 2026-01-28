@@ -1,27 +1,56 @@
 <template>
-  <el-timeline>
-    <el-timeline-item
-      v-for="post in posts"
-      :key="post.id"
-      :timestamp="formatDateTime(post.created_at)"
-      placement="top"
-      color="#667eea"
-      size="large"
+  <div class="space-y-8">
+    <!-- 日期分组 -->
+    <div
+      v-for="(group, date) in groupedPosts"
+      :key="date"
+      class="space-y-3"
     >
-      <div
-        @click="openModal(post)"
-        class="group relative bg-white p-5 sm:p-4 rounded-lg border border-gray-100 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:border-[#667eea]/40 hover:-translate-y-0.5"
-      >
-        <h3 class="text-base font-bold text-gray-800 mb-2 group-hover:text-[#667eea] transition-colors pr-4">
-          {{ getTitle(post.content) }}
-        </h3>
-
-        <p v-if="getPreview(post.content)" class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
-          {{ getPreview(post.content) }}
-        </p>
+      <!-- 日期标题 -->
+      <div class="text-sm text-gray-400 font-medium pl-1">
+        {{ date }}
       </div>
-    </el-timeline-item>
-  </el-timeline>
+
+      <!-- 当天的消息列表 -->
+      <div class="space-y-2">
+        <div
+          v-for="post in group"
+          :key="post.id"
+          @click="openModal(post)"
+          class="group bg-white
+                 px-4 py-3
+                 rounded-md border border-gray-100
+                 cursor-pointer
+                 transition-colors duration-150
+                 hover:border-gray-200"
+        >
+          <!-- 标题 + 时间 -->
+          <div class="flex items-start justify-between gap-3">
+            <h3
+              class="text-[15px] font-medium text-gray-800
+                     leading-snug group-hover:text-gray-900"
+            >
+              {{ getTitle(post.content) }}
+            </h3>
+
+            <!-- 时间（弱信息） -->
+            <span class="text-[11px] text-gray-400 whitespace-nowrap">
+              {{ formatTime(post.created_at) }}
+            </span>
+          </div>
+
+          <!-- 预览内容 -->
+          <p
+            v-if="getPreview(post.content)"
+            class="mt-1 text-[13px] text-gray-500
+                   leading-relaxed line-clamp-2"
+          >
+            {{ getPreview(post.content) }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <PostModal
     v-if="selectedPost"
@@ -31,11 +60,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import PostModal from './PostModal.vue'
 import { formatDateTime } from '@/utils/format'
 
-defineProps({
+const props = defineProps({
   posts: {
     type: Array,
     required: true
@@ -50,114 +79,67 @@ const openModal = (post) => {
   modalVisible.value = true
 }
 
-// 从内容中提取标题（第一行或前40个字符）
+/**
+ * 按日期分组（最新日期在最上）
+ */
+const groupedPosts = computed(() => {
+  const groups = {}
+
+  // 先按时间倒序（确保最新在前）
+  const sorted = [...props.posts].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  )
+
+  for (const post of sorted) {
+    const dateKey = formatDate(post.created_at)
+    if (!groups[dateKey]) {
+      groups[dateKey] = []
+    }
+    groups[dateKey].push(post)
+  }
+
+  return groups
+})
+
+// 只显示日期（YYYY-MM-DD）
+const formatDate = (datetime) => {
+  return formatDateTime(datetime).split(' ')[0]
+}
+
+// 只显示时间（HH:mm）
+const formatTime = (datetime) => {
+  const parts = formatDateTime(datetime).split(' ')
+  return parts[1] || ''
+}
+
+// ===== 原有逻辑，未改 =====
+
 const getTitle = (content) => {
   if (!content) return ''
-
-  // 如果有换行符，使用第一行作为标题
   const lines = content.split('\n').filter(line => line.trim())
   if (lines.length > 1) {
     const firstLine = lines[0].trim()
     return firstLine.length > 40 ? firstLine.substring(0, 40) + '...' : firstLine
   }
-
-  // 如果内容较长，截取前40个字符作为标题
   if (content.length > 50) {
     return content.substring(0, 40).trim() + '...'
   }
-
-  // 如果内容较短，直接作为标题
   return content.trim()
 }
 
-// 获取内容预览（跳过第一行，或显示剩余内容）
 const getPreview = (content) => {
   if (!content) return ''
-
-  // 如果有换行符，显示第一行之后的内容
   const lines = content.split('\n').filter(line => line.trim())
   if (lines.length > 1) {
     return lines.slice(1).join('\n').trim()
   }
-
-  // 如果内容较长，显示标题之后的内容
   if (content.length > 50) {
     return content.substring(40).trim()
   }
-
-  // 如果内容较短，不显示预览（避免重复）
   return ''
 }
 </script>
 
-<style>
-/* 全局样式：强制覆盖 Element Plus 的 timeline padding */
-@media (max-width: 640px) {
-  .el-timeline.is-start {
-    padding-left: 0 !important;
-  }
-}
-</style>
-
 <style scoped>
-/* 调整 Timeline 线条颜色 */
-:deep(.el-timeline-item__tail) {
-  border-left: 2px solid #e5e7eb;
-}
-
-/* 调整节点光晕：增加了一点点透明度，让它看起来更精致 */
-:deep(.el-timeline-item__node) {
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-}
-
-/* 强制覆盖时间戳的字体，保持一致性 */
-:deep(.el-timeline-item__timestamp) {
-  font-family: inherit;
-}
-
-/* 移动端优化：时间轴与标题左对齐 */
-@media (max-width: 640px) {
-  /* 移除时间轴容器的默认 padding */
-  :deep(.el-timeline),
-  :deep(.el-timeline.is-start) {
-    padding-left: 0 !important;
-  }
-
-  /* 时间戳样式 - 极度压缩 */
-  :deep(.el-timeline-item__timestamp) {
-    font-size: 9px !important;
-    padding-right: 6px !important;
-    width: 64px !important;
-    max-width: 64px !important;
-    min-width: 64px !important;
-    line-height: 1.25 !important;
-    word-break: keep-all;
-    white-space: normal;
-    hyphens: none;
-    opacity: 0.75;
-  }
-
-  /* 时间轴节点 - 对齐到标题位置 */
-  :deep(.el-timeline-item__node) {
-    width: 8px !important;
-    height: 8px !important;
-    left: 64px !important;
-  }
-
-  /* 时间轴线条 - 对齐到标题位置 */
-  :deep(.el-timeline-item__tail) {
-    left: 64px !important;
-  }
-
-  /* 时间轴项目 */
-  :deep(.el-timeline-item) {
-    padding-left: 0 !important;
-  }
-
-  /* 内容区域 - 让卡片从节点位置开始，卡片内 padding 会让标题与节点对齐 */
-  :deep(.el-timeline-item__wrapper) {
-    padding-left: 10px !important;
-    margin-left: 64px !important;
-  }
-}
+/* 整体背景干净，像 Notion / 日志 */
 </style>
