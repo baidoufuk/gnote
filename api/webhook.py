@@ -12,6 +12,9 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 TELEGRAM_WEBHOOK_SECRET = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "")
 
+# CORS 配置（默认允许所有来源，生产环境应设置为具体域名）
+ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
+
 # 初始化 Supabase 客户端
 supabase = None
 if SUPABASE_URL and SUPABASE_KEY:
@@ -114,7 +117,7 @@ class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         # 处理 CORS 预检请求
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
         self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
         send_security_headers(self)

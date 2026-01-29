@@ -16,6 +16,9 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_KEY = SUPABASE_SERVICE_ROLE_KEY or os.environ.get("SUPABASE_KEY", "")
 IS_DEVELOPMENT = os.environ.get("VERCEL_ENV") != "production"
 
+# CORS 配置（默认允许所有来源，生产环境应设置为具体域名）
+ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
+
 # 初始化 Supabase 客户端
 supabase = None
 logger.info({
@@ -94,7 +97,7 @@ class handler(BaseHTTPRequestHandler):
         except (ValueError, IndexError):
             self.send_response(400)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
             send_security_headers(self)
             self.end_headers()
             error_response = {
@@ -159,7 +162,7 @@ class handler(BaseHTTPRequestHandler):
             # 设置响应头
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
             self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
             self.send_header('Access-Control-Allow-Headers', '*')
             send_security_headers(self)
@@ -179,7 +182,7 @@ class handler(BaseHTTPRequestHandler):
 
             self.send_response(500)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
             send_security_headers(self)
             self.end_headers()
 
@@ -192,7 +195,7 @@ class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         # 处理 CORS 预检请求
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
         self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
         send_security_headers(self)
