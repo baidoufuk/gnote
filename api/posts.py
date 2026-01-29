@@ -72,6 +72,15 @@ def get_fake_posts():
     return fake_posts
 
 
+def send_security_headers(handler_instance):
+    """添加安全响应头"""
+    handler_instance.send_header('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
+    handler_instance.send_header('X-Frame-Options', 'DENY')
+    handler_instance.send_header('X-Content-Type-Options', 'nosniff')
+    handler_instance.send_header('Referrer-Policy', 'strict-origin-when-cross-origin')
+    handler_instance.send_header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()')
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         # 解析查询参数
@@ -86,6 +95,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_response(400)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
+            send_security_headers(self)
             self.end_headers()
             error_response = {
                 "success": False,
@@ -152,6 +162,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
             self.send_header('Access-Control-Allow-Headers', '*')
+            send_security_headers(self)
             self.end_headers()
 
             # 返回 JSON 响应
@@ -169,6 +180,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_response(500)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
+            send_security_headers(self)
             self.end_headers()
 
             error_response = {
@@ -183,4 +195,5 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
+        send_security_headers(self)
         self.end_headers()

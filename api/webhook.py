@@ -22,6 +22,15 @@ if SUPABASE_URL and SUPABASE_KEY:
         logger.error(f"Failed to initialize Supabase: {e}")
 
 
+def send_security_headers(handler_instance):
+    """添加安全响应头"""
+    handler_instance.send_header('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
+    handler_instance.send_header('X-Frame-Options', 'DENY')
+    handler_instance.send_header('X-Content-Type-Options', 'nosniff')
+    handler_instance.send_header('Referrer-Policy', 'strict-origin-when-cross-origin')
+    handler_instance.send_header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()')
+
+
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
@@ -30,6 +39,7 @@ class handler(BaseHTTPRequestHandler):
                 logger.error("TELEGRAM_WEBHOOK_SECRET not configured")
                 self.send_response(500)
                 self.send_header('Content-type', 'application/json')
+                send_security_headers(self)
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": "Server misconfigured"}).encode())
                 return
@@ -39,6 +49,7 @@ class handler(BaseHTTPRequestHandler):
                 logger.warning(f"Invalid webhook secret token attempt")
                 self.send_response(403)
                 self.send_header('Content-type', 'application/json')
+                send_security_headers(self)
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": "Forbidden"}).encode())
                 return
@@ -48,6 +59,7 @@ class handler(BaseHTTPRequestHandler):
             if content_length > 1024 * 1024:  # 1MB
                 self.send_response(413)
                 self.send_header('Content-type', 'application/json')
+                send_security_headers(self)
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": "Payload too large"}).encode())
                 return
@@ -61,6 +73,7 @@ class handler(BaseHTTPRequestHandler):
             except json.JSONDecodeError:
                 self.send_response(400)
                 self.send_header('Content-type', 'application/json')
+                send_security_headers(self)
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": "Invalid JSON"}).encode())
                 return
@@ -84,6 +97,7 @@ class handler(BaseHTTPRequestHandler):
             # 返回成功响应
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
+            send_security_headers(self)
             self.end_headers()
             self.wfile.write(json.dumps({"ok": True}).encode())
 
@@ -102,4 +116,5 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
+        send_security_headers(self)
         self.end_headers()
