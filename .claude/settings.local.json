@@ -21,7 +21,13 @@
       "mcp__codex__codex",
       "Bash(vercel --prod)",
       "Bash(vercel logs:*)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(git push:*)",
+      "Bash(vercel ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
