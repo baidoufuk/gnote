@@ -7,8 +7,7 @@
         </svg>
         阿K的分享
       </h1>
-      <p class="text-white/85 text-xs sm:text-[11px] font-light mt-1">个人分享信息，不做各种决策建议</p>
-      <p class="text-[10px] font-light mt-0.5" style="color: rgb(255, 149, 110)">免责声明：网页内容为网络分享，不构成投资/法律/医疗等专业建议</p>
+      <p class="text-[12px] font-light mt-1" style="color: rgb(255, 149, 110)">免责声明：网站内容仅作为网络信息分享，不构成投资/法律/医疗等专业建议</p>
     </div>
   </header>
 </template>
