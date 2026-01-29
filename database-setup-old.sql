@@ -31,23 +31,9 @@ ON posts
 FOR SELECT
 USING (is_filtered = FALSE);
 
--- 5. 创建 RLS 策略（允许通过 anon key 插入数据）
--- 注意：这允许任何使用 anon key 的客户端插入数据
--- 如果需要更严格的控制，应该使用认证系统
-CREATE POLICY "Allow insert with anon key"
-ON posts
-FOR INSERT
-WITH CHECK (true);
-
--- 6. 创建 RLS 策略（允许通过 anon key 更新数据）
-CREATE POLICY "Allow update with anon key"
-ON posts
-FOR UPDATE
-USING (true)
-WITH CHECK (true);
-
--- 7. 创建 RLS 策略（允许通过 service_role 进行所有操作）
--- 注意：这个策略只在使用 service_role key 时生效
+-- 5. 创建 RLS 策略（允许通过 service_role 进行所有操作）
+-- 注意：service_role 密钥应仅在后端使用，不应暴露给前端
+-- 所有写入操作应通过使用 service_role 的后端 API 进行
 CREATE POLICY "Allow all operations with service role"
 ON posts
 FOR ALL

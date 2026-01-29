@@ -73,20 +73,7 @@ USING (
     AND status = 'published'
 );
 
--- 6. 创建 RLS 策略（允许通过 anon key 插入数据）
-CREATE POLICY "Allow insert with anon key"
-ON gold_signals
-FOR INSERT
-WITH CHECK (true);
-
--- 7. 创建 RLS 策略（允许通过 anon key 更新数据）
-CREATE POLICY "Allow update with anon key"
-ON gold_signals
-FOR UPDATE
-USING (true)
-WITH CHECK (true);
-
--- 8. 创建 RLS 策略（允许作者查看和编辑自己的帖子）
+-- 6. 创建 RLS 策略（允许作者查看和编辑自己的帖子）
 -- 注意：这个策略在用户登录后才会生效
 CREATE POLICY "Allow authors to manage their own posts"
 ON gold_signals
@@ -94,7 +81,8 @@ FOR ALL
 USING (auth.uid() = author_id)
 WITH CHECK (auth.uid() = author_id);
 
--- 9. 创建 RLS 策略（允许通过 service_role 进行所有操作）
+-- 7. 创建 RLS 策略（允许通过 service_role 进行所有操作）
+-- 注意：service_role 密钥应仅在后端使用，不应暴露给前端
 CREATE POLICY "Allow all operations with service role"
 ON gold_signals
 FOR ALL
