@@ -24,19 +24,19 @@
                  transition-colors duration-150
                  hover:border-gray-200"
         >
-          <!-- 标题 + 时间 -->
-          <div class="flex items-start justify-between gap-3">
-            <h3
-              class="text-[15px] font-medium text-gray-800
-                     leading-snug group-hover:text-gray-900"
-            >
-              {{ getTitle(post.content) }}
-            </h3>
-
+          <!-- 时间 + 标题 -->
+          <div class="flex items-start gap-3">
             <!-- 时间（弱信息） -->
             <span class="text-[11px] text-gray-400 whitespace-nowrap">
               {{ formatTime(post.created_at) }}
             </span>
+
+            <h3
+              class="text-[15px] font-medium text-gray-800
+                     leading-snug group-hover:text-gray-900 flex-1"
+            >
+              {{ getTitle(post.content) }}
+            </h3>
           </div>
 
           <!-- 预览内容 -->
