@@ -107,6 +107,7 @@ class handler(BaseHTTPRequestHandler):
 
             self.send_response(500)
             self.send_header('Content-type', 'application/json')
+            send_security_headers(self)
             self.end_headers()
             self.wfile.write(json.dumps({"ok": False, "error": "Internal server error"}).encode())
 
