@@ -26,8 +26,12 @@
         >
           <!-- 时间 + 标题 -->
           <div class="flex items-start gap-3">
-            <!-- 时间（弱信息） -->
-            <span class="text-[11px] text-gray-400 whitespace-nowrap">
+            <!-- 时间（徽章样式） -->
+            <span class="inline-flex items-center justify-center
+                         min-w-[42px] px-2 py-0.5
+                         text-[10px] font-medium text-gray-600
+                         bg-gray-100 rounded
+                         whitespace-nowrap">
               {{ formatTime(post.created_at) }}
             </span>
 
