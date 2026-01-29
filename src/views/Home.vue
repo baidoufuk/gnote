@@ -41,8 +41,10 @@ import { ElMessageBox } from 'element-plus'
 import Header from '@/components/Header.vue'
 import PostList from '@/components/PostList.vue'
 import { usePosts } from '@/composables/usePosts'
+import { useAuth } from '@/composables/useAuth'
 
 const { posts, loading, fetchPosts } = usePosts()
+const { restoreSession } = useAuth()
 
 const showTipDialog = () => {
   ElMessageBox.alert(
@@ -61,7 +63,12 @@ const showTipDialog = () => {
 }
 
 onMounted(() => {
+  // 恢复会话
+  restoreSession()
+
+  // 获取帖子
   fetchPosts()
+
   // 显示友情提示弹窗
   showTipDialog()
 })

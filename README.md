@@ -219,3 +219,13 @@ npm run build
 - Firefox 88+
 - Safari 14+
 - Edge 90+
+
+## 项目文档
+
+详细的技术文档请查看 [docs](./docs/) 目录：
+
+- [登录系统说明](./docs/LOGIN-SYSTEM.md) - 完整的认证和账号共享检测机制
+- [数据库字段说明](./docs/DATABASE-FIELDS.md)
+- [部署指南](./docs/DEPLOYMENT.md)
+- [更多文档...](./docs/README.md)
+

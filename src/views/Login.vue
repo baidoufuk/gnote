@@ -68,9 +68,20 @@
         </button>
       </form>
 
-      <!-- 底部提示 -->
-      <div class="text-center text-sm text-gray-500 pt-4 border-t">
-        <p>如需账号请联系管理员</p>
+      <!-- 底部警告提示 -->
+      <div class="pt-4 border-t">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="text-xs text-red-800 leading-relaxed">
+              <p class="font-bold mb-1">严禁多人共享账号</p>
+              <p>系统已启用智能检测机制，一旦发现账号共享行为，将立即永久封禁账号，且不予解封。请妥善保管账号信息，切勿与他人共享。</p>
+            </div>
+          </div>
+        </div>
+        <p class="text-center text-xs text-gray-400 mt-3">如需账号请联系管理员</p>
       </div>
     </div>
   </div>
@@ -80,8 +91,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { collectFingerprint, generateFingerprintHash } from '@/utils/fingerprint'
+import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
+const { login } = useAuth()
 
 const username = ref('')
 const password = ref('')
@@ -98,16 +111,8 @@ const handleLogin = async () => {
     const fingerprint = collectFingerprint()
     const fingerprintHash = await generateFingerprintHash(fingerprint)
 
-    // 2. 调用登录 API（这里需要实现）
-    // TODO: 实现登录逻辑
-    console.log('Login attempt:', {
-      username: username.value,
-      fingerprint,
-      fingerprintHash
-    })
-
-    // 临时：模拟登录成功
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // 2. 调用登录 API
+    await login(username.value, password.value, fingerprint, fingerprintHash)
 
     // 3. 登录成功，跳转到首页
     router.push('/')
