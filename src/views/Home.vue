@@ -48,7 +48,7 @@ const { restoreSession } = useAuth()
 
 const showTipDialog = () => {
   ElMessageBox.alert(
-    '每次都要系好安全带，\\n切勿盲目跟车，\\n错过就等待下一班公交，\\n公交永远都有，不差这一班。',
+    '每次都要系好安全带，\n切勿盲目跟车，\n错过就等待下一班公交，\n公交永远都有，不差这一班。',
     '友情提示',
     {
       confirmButtonText: '我知道了',

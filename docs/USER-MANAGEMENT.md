@@ -241,6 +241,79 @@ curl -X POST https://your-domain.vercel.app/api/admin/create-user \
 
 ## 用户管理操作
 
+### 修改密码
+
+系统提供两种修改密码的方式：
+
+#### 方式一：用户自己修改密码
+
+**API 端点**：`POST /api/auth/change-password`
+
+**使用方法**：
+```bash
+curl -X POST https://your-domain.vercel.app/api/auth/change-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "old_password": "old_password123",
+    "new_password": "new_password456"
+  }'
+```
+
+**要求**：
+- 必须提供正确的旧密码
+- 新密码至少 6 位
+- 新密码不能与旧密码相同
+
+**响应示例**：
+```json
+{
+  "success": true,
+  "data": {
+    "message": "密码修改成功，请使用新密码重新登录"
+  }
+}
+```
+
+#### 方式二：管理员重置密码
+
+**API 端点**：`POST /api/admin/reset-password`
+
+**使用方法**：
+```bash
+curl -X POST https://your-domain.vercel.app/api/admin/reset-password \
+  -H "Content-Type: application/json" \
+  -H "X-Admin-Secret: your-admin-secret" \
+  -d '{
+    "username": "testuser",
+    "new_password": "new_password123"
+  }'
+```
+
+**要求**：
+- 需要管理员密钥（ADMIN_SECRET）
+- 不需要旧密码
+- 新密码至少 6 位
+
+**响应示例**：
+```json
+{
+  "success": true,
+  "data": {
+    "username": "testuser",
+    "message": "密码重置成功"
+  }
+}
+```
+
+#### 方式三：通过 Supabase Dashboard
+
+1. 进入 Supabase Dashboard → Authentication → Users
+2. 找到要重置密码的用户
+3. 点击用户行的 `...` 菜单
+4. 选择 `Reset Password`
+5. 输入新密码并确认
+
 ### 查看所有用户
 
 在 Supabase Dashboard：
@@ -251,9 +324,15 @@ curl -X POST https://your-domain.vercel.app/api/admin/create-user \
 在 Supabase Dashboard：
 - `Authentication` → `Users`
 - 找到用户，点击 `...` → `Reset Password`
-- 或使用 SQL：
-  ```sql
-  -- 需要通过 Supabase Auth Admin API 执行
+- 或使用管理员 API：
+  ```bash
+  curl -X POST https://your-domain.vercel.app/api/admin/reset-password \
+    -H "Content-Type: application/json" \
+    -H "X-Admin-Secret: your-admin-secret" \
+    -d '{
+      "username": "username_here",
+      "new_password": "new_password123"
+    }'
   ```
 
 ### 封禁用户
